@@ -7,7 +7,7 @@ AURUM is a small luxury storefront built to show how a few honest layers fit tog
 ## Product structure
 
 ```
-aurum/
+sort-stability/
 ├── public/
 │   └── index.html          HTML + CSS + JavaScript in one file
 ├── data/
