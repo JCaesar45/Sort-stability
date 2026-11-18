@@ -1,0 +1,8 @@
+[
+  {"id": 1, "name": "Aurum Chronograph", "category": "Watches", "price": 4800},
+  {"id": 2, "name": "Onyx Signet Ring", "category": "Jewelry", "price": 1250},
+  {"id": 3, "name": "Verdant Weekender", "category": "Bags", "price": 950},
+  {"id": 4, "name": "Noir Cashmere Overcoat", "category": "Apparel", "price": 2100},
+  {"id": 5, "name": "Solstice No. 9", "category": "Fragrance", "price": 320},
+  {"id": 6, "name": "Meridian Fountain Pen", "category": "Writing", "price": 640}
+]
