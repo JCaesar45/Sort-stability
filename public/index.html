@@ -1,0 +1,723 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>AURUM — Objects of Quiet Luxury</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✦</text></svg>"
+    />
+    <style>
+      :root {
+        --bg: #0b0a09;
+        --fg: #f3ece0;
+        --muted: #a89f90;
+        --gold: #d4af6a;
+        --card: #15130f;
+        --line: #2a251c;
+        color-scheme: dark;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: light) {
+        :root:not([data-theme="dark"]) {
+          --bg: #faf6ee;
+          --fg: #1c1812;
+          --muted: #6b6254;
+          --gold: #9a7424;
+          --card: #ffffff;
+          --line: #e3d9c4;
+          color-scheme: light;
+        }
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      h1,
+      h2,
+      h3,
+      .brand {
+        font-family: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+      }
+      header {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 20;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem clamp(1rem, 5vw, 4rem);
+        background: color-mix(in srgb, var(--bg) 82%, transparent);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--line);
+      }
+      .brand {
+        font-size: 1.6rem;
+        color: var(--gold);
+        letter-spacing: 0.35em;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+      }
+      .bag {
+        background: none;
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        padding: 0.5rem 1.1rem;
+        border-radius: 99px;
+        transition: 0.25s;
+      }
+      .bag:hover {
+        background: var(--gold);
+        color: var(--bg);
+      }
+      .hero {
+        position: relative;
+        min-height: 88vh;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 4rem 1.5rem;
+        overflow: hidden;
+      }
+      #fx {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .hero div {
+        position: relative;
+        max-width: 46rem;
+      }
+      .hero h1 {
+        font-size: clamp(2.8rem, 9vw, 6rem);
+        line-height: 1.02;
+        margin: 0 0 1.2rem;
+      }
+      .hero h1 em {
+        color: var(--gold);
+        font-style: italic;
+      }
+      .hero p {
+        color: var(--muted);
+        font-size: 1.1rem;
+        margin: 0 auto 2rem;
+        max-width: 34rem;
+      }
+      .cta {
+        display: inline-block;
+        background: var(--gold);
+        color: var(--bg);
+        padding: 0.95rem 2.4rem;
+        border-radius: 99px;
+        text-decoration: none;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s;
+      }
+      .cta:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 40px color-mix(in srgb, var(--gold) 40%, transparent);
+      }
+      section {
+        padding: 5rem clamp(1rem, 5vw, 4rem);
+      }
+      section > h2 {
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        margin: 0 0 0.4rem;
+      }
+      .bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        align-items: center;
+        margin: 1.5rem 0 2.5rem;
+      }
+      .chip,
+      select {
+        background: none;
+        color: var(--fg);
+        border: 1px solid var(--line);
+        padding: 0.45rem 1rem;
+        border-radius: 99px;
+      }
+      .chip.on {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      select {
+        margin-left: auto;
+        background: var(--card);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 1.1rem;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.7s,
+          transform 0.7s,
+          border-color 0.3s;
+      }
+      .card.in {
+        opacity: 1;
+        transform: none;
+      }
+      .card:hover {
+        border-color: var(--gold);
+      }
+      .art {
+        aspect-ratio: 4/3;
+        background: radial-gradient(
+          circle at 30% 25%,
+          hsl(var(--h) 55% 62%),
+          hsl(var(--h) 45% 22%) 55%,
+          #0b0a09
+        );
+        display: grid;
+        place-items: center;
+        font-size: 3rem;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .info {
+        padding: 1.2rem;
+      }
+      .info small {
+        color: var(--muted);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+      }
+      .info h3 {
+        margin: 0.2rem 0 0.8rem;
+        font-size: 1.4rem;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .row b {
+        color: var(--gold);
+        font-size: 1.1rem;
+      }
+      .add {
+        background: none;
+        border: 1px solid var(--line);
+        color: var(--fg);
+        padding: 0.4rem 1rem;
+        border-radius: 99px;
+        transition: 0.2s;
+      }
+      .add:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .pillars {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 2rem;
+        border-top: 1px solid var(--line);
+      }
+      .pillars h3 {
+        color: var(--gold);
+        margin: 0 0 0.4rem;
+        font-size: 1.5rem;
+      }
+      .pillars p {
+        color: var(--muted);
+        margin: 0;
+      }
+      footer {
+        padding: 2.5rem;
+        text-align: center;
+        color: var(--muted);
+        border-top: 1px solid var(--line);
+        font-size: 0.85rem;
+      }
+      aside {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: min(26rem, 100%);
+        background: var(--card);
+        border-left: 1px solid var(--line);
+        z-index: 30;
+        transform: translateX(100%);
+        transition: transform 0.45s cubic-bezier(0.7, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        padding: calc(1.5rem + env(safe-area-inset-top, 0px)) 1.5rem
+          calc(1.5rem + env(safe-area-inset-bottom, 0px));
+      }
+      aside.open {
+        transform: none;
+      }
+      aside h2 {
+        margin: 0 0 1rem;
+      }
+      #lines {
+        flex: 1;
+        overflow-y: auto;
+      }
+      .line {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .qty button {
+        background: none;
+        border: 1px solid var(--line);
+        color: var(--fg);
+        width: 1.7rem;
+        height: 1.7rem;
+        border-radius: 50%;
+      }
+      .qty span {
+        display: inline-block;
+        min-width: 1.6rem;
+        text-align: center;
+      }
+      aside input {
+        width: 100%;
+        background: var(--bg);
+        color: var(--fg);
+        border: 1px solid var(--line);
+        padding: 0.8rem 1rem;
+        border-radius: 0.7rem;
+        margin: 1rem 0 0.7rem;
+        font: inherit;
+      }
+      aside .cta {
+        width: 100%;
+        border: 0;
+        text-align: center;
+      }
+      #msg {
+        min-height: 1.5rem;
+        color: var(--gold);
+        font-size: 0.9rem;
+        margin: 0.7rem 0 0;
+      }
+      #veil {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.3s;
+        z-index: 25;
+      }
+      #veil.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+        .card {
+          opacity: 1;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <span class="brand">AURUM</span>
+      <button class="bag" id="openBag" aria-label="Open bag">
+        Bag (
+        <span id="count">0</span>
+        )
+      </button>
+    </header>
+
+    <main>
+      <div class="hero">
+        <canvas id="fx" aria-hidden="true"></canvas>
+        <div>
+          <h1>
+            Objects of
+            <em>quiet</em>
+            luxury.
+          </h1>
+          <p>
+            Six pieces, made slowly, built to outlast the people who buy them.
+          </p>
+          <a class="cta" href="#collection">Explore the collection</a>
+        </div>
+      </div>
+
+      <section id="collection">
+        <h2>The Collection</h2>
+        <div class="bar" id="chips"></div>
+        <div class="grid" id="grid"></div>
+      </section>
+
+      <section class="pillars">
+        <div>
+          <h3>Hand-finished</h3>
+          <p>
+            Every piece passes through a single artisan from first cut to final
+            polish.
+          </p>
+        </div>
+        <div>
+          <h3>Insured delivery</h3>
+          <p>Tracked, signed for, and covered end to end on every order.</p>
+        </div>
+        <div>
+          <h3>Lifetime care</h3>
+          <p>Service and restoration are included for as long as you own it.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>© 2026 AURUM Maison. All rights reserved.</footer>
+
+    <div id="veil"></div>
+    <aside id="drawer" aria-label="Shopping bag">
+      <h2>Your bag</h2>
+      <div id="lines"></div>
+      <div class="row">
+        <span>Total</span>
+        <b id="total">$0</b>
+      </div>
+      <input
+        id="email"
+        type="email"
+        placeholder="Email for confirmation"
+        autocomplete="email"
+      />
+      <button class="cta" id="buy">Place order</button>
+      <p id="msg" role="status"></p>
+    </aside>
+
+    <script>
+      (() => {
+        const $ = (s) => document.querySelector(s);
+        const FALLBACK = [
+          {
+            id: 1,
+            name: "Aurum Chronograph",
+            category: "Watches",
+            price: 4800
+          },
+          { id: 2, name: "Onyx Signet Ring", category: "Jewelry", price: 1250 },
+          { id: 3, name: "Verdant Weekender", category: "Bags", price: 950 },
+          {
+            id: 4,
+            name: "Noir Cashmere Overcoat",
+            category: "Apparel",
+            price: 2100
+          },
+          { id: 5, name: "Solstice No. 9", category: "Fragrance", price: 320 },
+          {
+            id: 6,
+            name: "Meridian Fountain Pen",
+            category: "Writing",
+            price: 640
+          }
+        ];
+        const money = (n) =>
+          new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 0
+          }).format(n);
+        const esc = (s) =>
+          String(s).replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+              })[c]
+          );
+        const stableSortBy = (arr, key, dir) =>
+          arr
+            .map((v, i) => [v, i])
+            .sort(
+              (a, b) =>
+                (a[0][key] < b[0][key] ? -1 : a[0][key] > b[0][key] ? 1 : 0) *
+                  dir || a[1] - b[1]
+            )
+            .map((p) => p[0]);
+
+        const state = { products: [], cat: "All", sort: "featured", cart: {} };
+        try {
+          const saved = JSON.parse(localStorage.getItem("aurum-cart") || "{}");
+          if (saved && typeof saved === "object") state.cart = saved;
+        } catch (e) {}
+        const persist = () => {
+          try {
+            localStorage.setItem("aurum-cart", JSON.stringify(state.cart));
+          } catch (e) {}
+        };
+
+        const io = new IntersectionObserver(
+          (es) =>
+            es.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add("in");
+                io.unobserve(e.target);
+              }
+            }),
+          { threshold: 0.15 }
+        );
+
+        function visible() {
+          let list =
+            state.cat === "All"
+              ? state.products
+              : state.products.filter((p) => p.category === state.cat);
+          if (state.sort === "price-asc") list = stableSortBy(list, "price", 1);
+          else if (state.sort === "price-desc")
+            list = stableSortBy(list, "price", -1);
+          else if (state.sort === "name") list = stableSortBy(list, "name", 1);
+          return list;
+        }
+
+        function renderChips() {
+          const cats = [
+            "All",
+            ...new Set(state.products.map((p) => p.category))
+          ];
+          $("#chips").innerHTML =
+            cats
+              .map(
+                (c) =>
+                  `<button class="chip${c === state.cat ? " on" : ""}" data-cat="${esc(c)}">${esc(c)}</button>`
+              )
+              .join("") +
+            `<select id="sort" aria-label="Sort products">
+        <option value="featured">Featured</option>
+        <option value="price-asc">Price: low to high</option>
+        <option value="price-desc">Price: high to low</option>
+        <option value="name">Name</option></select>`;
+          $("#sort").value = state.sort;
+        }
+
+        function renderGrid() {
+          $("#grid").innerHTML = visible()
+            .map(
+              (p) => `
+      <article class="card">
+        <div class="art" style="--h:${(p.id * 47) % 360}">✦</div>
+        <div class="info">
+          <small>${esc(p.category)}</small>
+          <h3>${esc(p.name)}</h3>
+          <div class="row"><b>${money(p.price)}</b><button class="add" data-id="${p.id}">Add to bag</button></div>
+        </div>
+      </article>`
+            )
+            .join("");
+          document.querySelectorAll(".card").forEach((c) => io.observe(c));
+        }
+
+        function renderCart() {
+          const byId = new Map(state.products.map((p) => [p.id, p]));
+          const rows = Object.entries(state.cart)
+            .map(([id, qty]) => ({ p: byId.get(+id), qty }))
+            .filter((r) => r.p && r.qty > 0);
+          const total = rows.reduce((s, r) => s + r.p.price * r.qty, 0);
+          $("#count").textContent = rows.reduce((s, r) => s + r.qty, 0);
+          $("#total").textContent = money(total);
+          $("#lines").innerHTML = rows.length
+            ? rows
+                .map(
+                  (r) => `
+      <div class="line"><div><div>${esc(r.p.name)}</div><small>${money(r.p.price)}</small></div>
+      <div class="qty"><button data-dec="${r.p.id}" aria-label="Remove one">−</button><span>${r.qty}</span><button data-inc="${r.p.id}" aria-label="Add one">+</button></div></div>`
+                )
+                .join("")
+            : `<p style="color:var(--muted)">Your bag is empty.</p>`;
+        }
+
+        const bump = (id, d) => {
+          const next = (state.cart[id] || 0) + d;
+          if (next <= 0) delete state.cart[id];
+          else state.cart[id] = next;
+          persist();
+          renderCart();
+        };
+        const toggle = (open) => {
+          $("#drawer").classList.toggle("open", open);
+          $("#veil").classList.toggle("open", open);
+        };
+        const say = (t) => {
+          $("#msg").textContent = t;
+        };
+
+        async function checkout() {
+          const email = $("#email").value.trim();
+          const items = Object.entries(state.cart).map(([id, qty]) => ({
+            id: +id,
+            qty
+          }));
+          if (!items.length) return say("Your bag is empty.");
+          if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email))
+            return say("Please enter a valid email address.");
+          let orderId,
+            offline = false;
+          try {
+            const r = await fetch("/api/orders", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, items })
+            });
+            if (!r.ok) throw new Error("status " + r.status);
+            orderId = (await r.json()).orderId;
+          } catch (e) {
+            orderId = "DEMO-" + Date.now().toString(36).toUpperCase();
+            offline = true;
+          }
+          state.cart = {};
+          persist();
+          renderCart();
+          say(
+            `Order ${orderId} confirmed.` +
+              (offline ? " (Demo mode: no server connected.)" : "")
+          );
+        }
+
+        document.addEventListener("click", (e) => {
+          const t = e.target;
+          if (t.dataset.cat) {
+            state.cat = t.dataset.cat;
+            renderChips();
+            renderGrid();
+          } else if (t.dataset.id) {
+            bump(t.dataset.id, 1);
+            toggle(true);
+          } else if (t.dataset.inc) bump(t.dataset.inc, 1);
+          else if (t.dataset.dec) bump(t.dataset.dec, -1);
+        });
+        document.addEventListener("change", (e) => {
+          if (e.target.id === "sort") {
+            state.sort = e.target.value;
+            renderGrid();
+          }
+        });
+        $("#openBag").addEventListener("click", () => toggle(true));
+        $("#veil").addEventListener("click", () => toggle(false));
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") toggle(false);
+        });
+        $("#buy").addEventListener("click", checkout);
+
+        function particles() {
+          const cv = $("#fx"),
+            ctx = cv.getContext("2d");
+          const gold =
+            getComputedStyle(document.documentElement)
+              .getPropertyValue("--gold")
+              .trim() || "#d4af6a";
+          let w, h, dots;
+          const size = () => {
+            w = cv.width = cv.offsetWidth;
+            h = cv.height = cv.offsetHeight;
+            dots = Array.from(
+              { length: Math.min(90, Math.floor(w / 14)) },
+              () => ({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3
+              })
+            );
+          };
+          const frame = () => {
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = gold;
+            ctx.strokeStyle = gold;
+            dots.forEach((a, i) => {
+              a.x = (a.x + a.vx + w) % w;
+              a.y = (a.y + a.vy + h) % h;
+              ctx.globalAlpha = 0.6;
+              ctx.beginPath();
+              ctx.arc(a.x, a.y, 1.4, 0, 6.283);
+              ctx.fill();
+              for (let j = i + 1; j < dots.length; j++) {
+                const b = dots[j],
+                  d = Math.hypot(a.x - b.x, a.y - b.y);
+                if (d < 110) {
+                  ctx.globalAlpha = (1 - d / 110) * 0.25;
+                  ctx.beginPath();
+                  ctx.moveTo(a.x, a.y);
+                  ctx.lineTo(b.x, b.y);
+                  ctx.stroke();
+                }
+              }
+            });
+            requestAnimationFrame(frame);
+          };
+          size();
+          window.addEventListener("resize", size);
+          if (!matchMedia("(prefers-reduced-motion: reduce)").matches) frame();
+        }
+
+        async function boot() {
+          try {
+            const r = await fetch("/api/products");
+            const data = r.ok ? await r.json() : null;
+            state.products =
+              Array.isArray(data) && data.length ? data : FALLBACK;
+          } catch (e) {
+            state.products = FALLBACK;
+          }
+          renderChips();
+          renderGrid();
+          renderCart();
+          particles();
+        }
+        boot();
+      })();
+    </script>
+  </body>
+</html>
